@@ -1,5 +1,19 @@
+### ### ### ### ###
+#   C++           #
+### ### ### ### ###
+
 # Build results
-build
-builddir
-build_cmake
-build_meson
+cpp_6502_emulator/build
+cpp_6502_emulator/builddir
+cpp_6502_emulator/build_cmake
+cpp_6502_emulator/build_meson
+main
+
+### #### ### ### ###
+#   Rust           #
+### #### ### ### ###
+
+# Cache 
+rust_6502_emulator/target
+rust_6502_emulator/Cargo.lock
+main
