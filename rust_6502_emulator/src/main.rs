@@ -9,7 +9,7 @@ struct Memory {
 
 impl Memory {
     fn new() -> Self {
-        let mut data = [0; 1024 * 64];
+        let data = [0; 1024 * 64];
         Memory {data}
     }
     
@@ -22,18 +22,18 @@ impl Memory {
     // read 1 byte from data
     fn get(&self, address: u32) -> Byte {
         assert!(address < 1024 * 64);
-        self.data[address]
+        self.data[address as usize]
     }
 }
 
 struct CPU {
-    PC: Word, // program counter
-    SP: Byte, // stack pointer
+    pc: Word, // program counter
+    sp: Byte, // stack pointer
 
     // registers
-    A: Byte,
-    X: Byte,
-    Y: Byte,
+    a: Byte,
+    x: Byte,
+    y: Byte,
 
     // status flags
     c: bool, // carry flag
@@ -48,11 +48,11 @@ struct CPU {
 impl CPU {
     fn new() -> Self {
         CPU {
-            PC: 0xFFFC,
-            SP: 0xFF,
-            A : 0,
-            X : 0,
-            Y : 0,
+            pc: 0xFFFC,
+            sp: 0xFF,
+            a : 0,
+            x : 0,
+            y : 0,
             c : false,
             z : false,
             i : false,
@@ -64,11 +64,11 @@ impl CPU {
     }
 
     fn reset(&mut self, memory: &mut Memory) {
-        self.PC = 0xFFFC;
-        self.SP = 0xFF;
-        self.A = 0;
-        self.X = 0;
-        self.Y = 0;
+        self.pc = 0xFFFC;
+        self.sp = 0xFF;
+        self.a = 0;
+        self.x = 0;
+        self.y = 0;
         self.c = false;
         self.z = false;
         self.i = false;
@@ -81,8 +81,8 @@ impl CPU {
     }
 
     fn fetch_byte(&mut self, cycles: &mut u32, memory: &mut Memory) -> Byte {
-        let data = memory.get(self.PC as u32);
-        self.PC += 1;
+        let data = memory.get(self.pc as u32);
+        self.pc += 1;
         *cycles -= 1;
         data
     }
@@ -93,9 +93,9 @@ impl CPU {
             match ins {
                 0xA9 => {
                     let value = self.fetch_byte(cycles, memory);
-                    self.A = value;
-                    self.Z = self.A == 0;
-                    self.n = (self.A & 0b10000000) > 0;
+                    self.a = value;
+                    self.z = self.a == 0;
+                    self.n = (self.a & 0b10000000) > 0;
                 }
                 _ => println!("instruction is unknown"),
             }
