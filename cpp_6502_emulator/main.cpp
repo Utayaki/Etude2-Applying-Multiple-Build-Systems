@@ -25,6 +25,11 @@ struct Memory {
 
     return Data[Address];
   }
+  Byte &operator[](u32 Address) {
+    assert((Address < MAX_MEM));
+
+    return Data[Address];
+  }
 };
 
 struct CPU {
@@ -83,6 +88,10 @@ int main() {
   Memory mem;
   CPU cpu;
   cpu.Reset(mem);
+  mem[0xFFFC] = CPU::INS_LDA_IM;
+  mem[0xFFFD] = 0x42;
+  printf("%.2X %.2X %.2X %.2X %.2X \n", mem[0xFFFA], mem[0xFFFB], mem[0xFFFC],
+         mem[0xFFFD], mem[0xFFFE]);
   cpu.Execute(2, mem);
 
   return 0;
