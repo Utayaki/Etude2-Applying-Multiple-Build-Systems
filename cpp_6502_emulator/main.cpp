@@ -84,15 +84,21 @@ struct CPU {
   }
 };
 
-int main() {
+void test_LDA_INS(Byte Value, Byte Z_result, Byte N_result) {
   Memory mem;
   CPU cpu;
   cpu.Reset(mem);
   mem[0xFFFC] = CPU::INS_LDA_IM;
-  mem[0xFFFD] = 0x42;
-  printf("%.2X %.2X %.2X %.2X %.2X \n", mem[0xFFFA], mem[0xFFFB], mem[0xFFFC],
-         mem[0xFFFD], mem[0xFFFE]);
+  mem[0xFFFD] = Value;
   cpu.Execute(2, mem);
+  assert((cpu.A == Value));
+  assert((cpu.Z == Z_result));
+  assert((cpu.N == N_result));
+}
 
+int main() {
+  test_LDA_INS(0xF0, 0x00, 0x01);
+  test_LDA_INS(0x00, 0x01, 0x00);
+  test_LDA_INS(0x42, 0x00, 0x00);
   return 0;
 }
